@@ -1,0 +1,26 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+build:
+  artifacts:
+    - image: localhost:5000/apps/demo
+#      custom:
+#        buildCommand: ./mvnw spring-boot:build-image -D spring-boot.build-image.imageName=$IMAGE && docker push $IMAGE
+      buildpacks:
+        builder: paketobuildpacks/builder:base
+        dependencies:
+          paths:
+            - pom.xml
+            - src/main/resources
+            - target/classes
+      sync:
+        manual:
+          - src: "src/main/resources/**/*"
+            dest: /workspace/BOOT-INF/classes
+            strip: src/main/resources/
+          - src: "target/classes/**/*"
+            dest: /workspace/BOOT-INF/classes
+            strip: target/classes/
+deploy:
+  kustomize:
+    paths:
+      - "src/k8s/demo/"

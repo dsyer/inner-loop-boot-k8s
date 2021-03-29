@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - image: apps/demo
+        name: hello-world
+        env:
+        - name: JAVA_TOOL_OPTIONS
+          value: -Dspring.devtools.restart.enabled=true
+        resources:
+          requests:
+            cpu: 500m
+          limits:
+            cpu: 4000m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world
+spec:
+  ports:
+  - name: 8000-8000
+    port: 8000
+    protocol: TCP
+    targetPort: 8000

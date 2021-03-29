@@ -15,6 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
+		<spring-boot.repackage.excludeDevtools>false</spring-boot.repackage.excludeDevtools>
 	</properties>
 	<dependencies>
 		<dependency>

@@ -1,4 +1,14 @@
 
+## Skaffold
+
+Remember to set `spring-boot.repackage.excludeDevtools=false` in the build (it's a property in the `pom.xml` in this project). Then:
+
+```
+skaffold dev --port-forward
+```
+
+App comes up on port 4503.
+
 ## Telepresence
 
 Set up a "hello world" service in Kubernetes:
