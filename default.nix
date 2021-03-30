@@ -6,12 +6,12 @@ let
 
   kindSetup = pkgs.writeShellScriptBin "kind-setup" "./kind-setup.sh";
   telepresence = pkgs.stdenv.mkDerivation {
-    pname = "telepresence2";
+    pname = "telepresence";
     version = "2.0.1";
     src = pkgs.fetchurl {
       url =
-        "https://app.getambassador.io/download/tel2/linux/amd64/latest/telepresence";
-      sha256 = "1cg20ll8dbgi481grinzjyjmkwypa9ky58sx37swy57pbms3gxph";
+        "https://app.getambassador.io/download/tel2/linux/amd64/2.1.3/telepresence";
+      sha256 = "1lzmkfw84v3svyb7qqigbd4zhd58df52p26cdxda3hvbkql3h4pc";
     };
     phases = [ "installPhase" "patchPhase" ];
     installPhase = ''
@@ -32,5 +32,6 @@ let
     skaffold
     kindSetup
     telepresence
+    tilt
   ];
 }

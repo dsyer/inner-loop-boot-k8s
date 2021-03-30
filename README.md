@@ -8,7 +8,7 @@
 
 ## Spring Boot Devtools
 
-[Devtools](https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-devtools) is a Spring Boot feature that watches for changes in source code and restarts the app. It's pretty fast because the JVM is not re-started and most of the classes (all the non-local ones) stay loaded.
+[Devtools](https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-devtools) is a Spring Boot feature that watches for changes in source code and restarts the app. It's pretty fast because the JVM is not re-started and most of the classes (all the non-local ones) stay loaded. It's really designed to work when you run the app locally, on bare metal, but it's not impossible to make it work in a container, and that is what we will need if we are going to use it in Kubernetes.
 
 To enable devtools we need an extra dependency, and to make it work in a container we need to make sure that dependency is included in the image. One way to do that is via a Maven profile:
 
@@ -71,13 +71,13 @@ Calculated JVM Memory Configuration: -XX:MaxDirectMemorySize=10M -Xmx15809483K -
 2021-03-30 08:19:31.832  INFO 1 --- [  restartedMain] com.example.demo.DemoApplication         : Started DemoApplication in 1.462 seconds (JVM running for 1.862)
 ```
 
-THe signature that it is working is the thread name "restartedMain".
+The signature that it is working is the thread name "restartedMain".
 
 Running like that in a fixed docker container isn't much help though. You also need to copy changes to local source code into the running container so that the devtools notice them and restart the app. That's not impossible, but it's a pain to set up. Skaffold does it for you out of the box.
 
 ## Skaffold
 
-Remember to set `spring-boot.repackage.excludeDevtools=false` in the build. You could set it as a property in the `pom.xml` or, as in this project, via a Maven profile, and set that with an environment variable for the buildpack `BP_MAVEN_BUILD_ARGUMENTS`:
+Remember the Maven profile above, and we can set that with an environment variable for the buildpack `BP_MAVEN_BUILD_ARGUMENTS`:
 
 ```
 apiVersion: skaffold/v2beta10
@@ -98,7 +98,7 @@ Then:
 skaffold dev --port-forward
 ```
 
-App comes up on port 4503.
+App comes up on port 4503. You can make changes and they will be synced to the running container, where they are picked up by devtools and the app will restart.
 
 ## Telepresence
 
