@@ -5,6 +5,7 @@
   - [Skaffold](#skaffold)
   - [Telepresence](#telepresence)
   - [Telepresence 0.1](#telepresence-01)
+  - [Tilt](#tilt)
 
 ## Spring Boot Devtools
 
@@ -143,6 +144,8 @@ To shut down the tunnel:
 telepresence leave hello-world
 ```
 
+Getting started tutorial: https://www.telepresence.io/tutorials/kubernetes.
+
 ## Telepresence 0.1
 
 The older version of [Telepresence](https://github.com/telepresenceio/telepresence) also still works, and this is the one you probably find in your OS package manager by default. Set up a "hello world" service in Kubernetes:
@@ -176,3 +179,23 @@ Yay!
 $ curl localhost:8080
 Hello, Spring!
 ```
+
+## Tilt
+
+[Tilt](https://tilt.dev/) is another tool that can sync local files with a running container (it's a bit more than that, but we can concentrate on that part here). The configuration options cover similar territory to Skaffold - building, syncing, deploying to Kubernetes - but because it uses Python it is quite flexible and expressive by comparison. A simple Spring Boot app like this project can be deployed and synced with a port forward using a short `Tiltfile`:
+
+```
+# -*- mode: Python -*-
+
+custom_build('localhost:5000/apps/demo', 
+  './mvnw spring-boot:build-image -P devtools -D image=$EXPECTED_REF',
+  ['pom.xml', './target/classes'],
+  live_update = [
+    sync('./target/classes', '/workspace/BOOT-INF/classes')
+  ]
+)
+k8s_yaml(kustomize('./src/k8s/demo'))
+k8s_resource('hello-world', port_forwards="8080:8080")
+```
+
+You just do `tilt up` on the command line, and that's it. The local port forward is explicitly on port 8080 there (and it connects to the pod not the service by default). We are syncing the build results the same as in Skaffold.
