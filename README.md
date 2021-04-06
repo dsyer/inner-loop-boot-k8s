@@ -144,6 +144,12 @@ To shut down the tunnel:
 telepresence leave hello-world
 ```
 
+and clean up:
+
+```
+telepresence uninstall --everything
+```
+
 Getting started tutorial: https://www.telepresence.io/tutorials/kubernetes.
 
 ## Telepresence 0.1
