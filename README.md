@@ -101,6 +101,14 @@ skaffold dev --port-forward
 
 App comes up on port 4503. You can make changes and they will be synced to the running container, where they are picked up by devtools and the app will restart.
 
+Skaffold supports debugging nicely as well. Remember to add the `--auto-sync` flag (it's off by default in debug mode):
+
+```
+skaffold debug --auto-sync --port-forward
+```
+
+and attach to port 5005 in the running pod. Your IDE can probably do that for you if it has a Kubernetes plugin of some sort.
+
 ## Telepresence
 
 Instead of using Skaffold to sync the changes with your source code into a running container, you can run the code locally (and debug it), and tunnel through to the k8s cluster using [Telepresence](https://github.com/telepresenceio/telepresence/tree/release/v2). The new shiny Telepresence 2.x is slick. First build a container (or use the one from `skaffold` above):
@@ -122,7 +130,15 @@ Then get it connected (you will need to give it sudo access):
 telepresence connect
 ```
 
-and add an intercept for the service:
+You might need a timeout to be configured (telepresence will tell you if it times out connecting):
+
+```
+$ cat > ~/.config/telepresence/config.yml
+timeouts:
+  trafficManagerConnect: 120
+```
+
+Then add an intercept for the service:
 
 ```
 telepresence intercept hello-world --port 8080:http
