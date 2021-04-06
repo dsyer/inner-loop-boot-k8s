@@ -11,7 +11,7 @@ let
     src = pkgs.fetchurl {
       url =
         "https://app.getambassador.io/download/tel2/linux/amd64/2.1.3/telepresence";
-      sha256 = "1lzmkfw84v3svyb7qqigbd4zhd58df52p26cdxda3hvbkql3h4pc";
+      sha256 = "1cg20ll8dbgi481grinzjyjmkwypa9ky58sx37swy57pbms3gxph";
     };
     phases = [ "installPhase" "patchPhase" ];
     installPhase = ''
