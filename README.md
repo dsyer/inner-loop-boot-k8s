@@ -1,6 +1,6 @@
 
-# Inner Loop Development with Spring Boot and Kubernetes
-- [Inner Loop Development with Spring Boot and Kubernetes](#inner-loop-development-with-spring-boot-and-kubernetes)
+# Inner Loop with Spring Boot and Kubernetes
+- [Inner Loop with Spring Boot and Kubernetes](#inner-loop-with-spring-boot-and-kubernetes)
   - [Spring Boot Devtools](#spring-boot-devtools)
   - [Skaffold](#skaffold)
   - [Telepresence](#telepresence)
