@@ -32,6 +32,7 @@ in buildEnv {
   paths = [
     jdk11
     apacheHttpd
+    figlet
     kind
     kubectl
     kustomize

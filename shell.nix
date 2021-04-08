@@ -6,7 +6,7 @@ mkShell {
     figlet
   ];
   shellHook = ''
-    figlet ":smile:"
+    figlet ":Inner Loop:"
     kind-setup
     kubectl get all
   '';
