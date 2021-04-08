@@ -13,7 +13,7 @@ let
         "https://app.getambassador.io/download/tel2/linux/amd64/2.1.3/telepresence";
       sha256 = "1cg20ll8dbgi481grinzjyjmkwypa9ky58sx37swy57pbms3gxph";
     };
-    phases = [ "installPhase" "postFixup" "patchPhase" ];
+    phases = [ "installPhase" "postFixup" ];
     installPhase = ''
       mkdir -p $out/bin
       cp $src $out/bin/telepresence
