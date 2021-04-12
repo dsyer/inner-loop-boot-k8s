@@ -1,11 +1,42 @@
 
 # Inner Loop with Spring Boot and Kubernetes
 - [Inner Loop with Spring Boot and Kubernetes](#inner-loop-with-spring-boot-and-kubernetes)
+  - [Getting Set Up](#getting-set-up)
+  - [Build a Container](#build-a-container)
   - [Spring Boot Devtools](#spring-boot-devtools)
   - [Skaffold](#skaffold)
   - [Telepresence](#telepresence)
   - [Telepresence 0.1](#telepresence-01)
   - [Tilt](#tilt)
+
+## Getting Set Up
+
+To explore the examples in this project you will need a Kubernetes cluster, and some command line tools: `kubectl`, `kustomize` (optionally), `skaffold`, `telepresence` and `tilt`. If you want a local cluster you can use `kind` and there is a utility script to set the cluster up in `kind-setup.sh`.
+
+If you are able to use [Nix](https://nixos.org/guides/install-nix.html) then you can install everything you need with `nix-shell` (on the command line in the root of the project).
+
+An IDE will be useful. VSCode has excellent Kubernetes features that you can install as extensions.
+
+## Build a Container
+
+There are many ways to build a container from a Spring Boot application. Here we will use [Paketo Build Packs](https://paketo.io/docs/buildpacks/). Spring Boot has a build plugin that uses buildpacks:
+
+```
+./mvnw spring-boot:build-image
+```
+
+Then you can run it
+
+```
+docker run -p 8080:8080 localhost:5000/apps/demo
+```
+
+```
+Setting Active Processor Count to 8
+Calculating JVM memory based on 16202804K available memory
+Calculated JVM Memory Configuration: -XX:MaxDirectMemorySize=10M -Xmx15809483K -XX:MaxMetaspaceSize=86120K -XX:ReservedCodeCacheSize=240M -Xss1M (Total Memory: 16202804K, Thread Count: 50, Loaded Class Count: 12791, Headroom: 0%)
+...
+```
 
 ## Spring Boot Devtools
 
@@ -42,19 +73,13 @@ To enable devtools we need an extra dependency, and to make it work in a contain
 </profiles>
 ```
 
-then at runtime you also need a JVM system property:
+Then you can run the app from the command line like this:
 
 ```
-docker run -p 8080:8080 -e JAVA_TOOL_OPTIONS=-Dspring.devtools.restart.enabled=true localhost:5000/apps/demo
+./mvnw spring-boot:run
 ```
 
 ```
-Setting Active Processor Count to 8
-Calculating JVM memory based on 16202804K available memory
-Calculated JVM Memory Configuration: -XX:MaxDirectMemorySize=10M -Xmx15809483K -XX:MaxMetaspaceSize=86120K -XX:ReservedCodeCacheSize=240M -Xss1M (Total Memory: 16202804K, Thread Count: 50, Loaded Class Count: 12791, Headroom: 0%)
-...
-08:19:30.358 [restartedMain] INFO org.springframework.boot.devtools.restart.RestartApplicationListener - Restart enabled irrespective of application packaging due to System property 'spring.devtools.restart.enabled' being set to true
-
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
@@ -72,13 +97,36 @@ Calculated JVM Memory Configuration: -XX:MaxDirectMemorySize=10M -Xmx15809483K -
 2021-03-30 08:19:31.832  INFO 1 --- [  restartedMain] com.example.demo.DemoApplication         : Started DemoApplication in 1.462 seconds (JVM running for 1.862)
 ```
 
-The signature that it is working is the thread name "restartedMain".
+The signature that it is working is the thread name "restartedMain". When you see that, you know you can make changes to the application in your IDE and the app will restart. The restart is fast because the JVM is already warm.
+
+To run the app in a container you would need to re-build it:
+
+```
+./mvnw spring-boot:build-image -P devtools
+```
+
+then at runtime you need a JVM system property:
+
+```
+docker run -p 8080:8080 -e JAVA_TOOL_OPTIONS=-Dspring.devtools.restart.enabled=true localhost:5000/apps/demo
+```
+
+```
+Setting Active Processor Count to 8
+Calculating JVM memory based on 16202804K available memory
+Calculated JVM Memory Configuration: -XX:MaxDirectMemorySize=10M -Xmx15809483K -XX:MaxMetaspaceSize=86120K -XX:ReservedCodeCacheSize=240M -Xss1M (Total Memory: 16202804K, Thread Count: 50, Loaded Class Count: 12791, Headroom: 0%)
+...
+08:19:30.358 [restartedMain] INFO org.springframework.boot.devtools.restart.RestartApplicationListener - Restart enabled irrespective of application packaging due to System property 'spring.devtools.restart.enabled' being set to true
+...
+```
 
 Running like that in a fixed docker container isn't much help though. You also need to copy changes to local source code into the running container so that the devtools notice them and restart the app. That's not impossible, but it's a pain to set up. Skaffold does it for you out of the box.
 
 ## Skaffold
 
-Remember the Maven profile above, and we can set that with an environment variable for the buildpack `BP_MAVEN_BUILD_ARGUMENTS`:
+[Skaffold](https://skaffold.dev/) is a build automation tool that you can use at dev time as well as to push apps into production. It has native support for buildpacks, but you can also use it with other container builders.
+
+Remember the Maven profile above, and we can set that with an environment variable for the buildpack `BP_MAVEN_BUILD_ARGUMENTS`. Here's the `skaffold.yaml`:
 
 ```
 apiVersion: skaffold/v2beta10
@@ -99,7 +147,7 @@ Then:
 skaffold dev --port-forward
 ```
 
-App comes up on port 4503. You can make changes and they will be synced to the running container, where they are picked up by devtools and the app will restart.
+The app comes up on port 4503. You can make changes and they will be synced to the running container, where they are picked up by devtools and the app will restart.
 
 Skaffold supports debugging nicely as well. Remember to add the `--auto-sync` flag (it's off by default in debug mode):
 
