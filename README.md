@@ -1,5 +1,10 @@
 
-# Inner Loop with Spring Boot and Kubernetes
+# [Inner Loop](https://www.getambassador.io/docs/telepresence/latest/concepts/devloop/) with Spring Boot and Kubernetes
+
+Twitter: [@david_syer  ](https://twitter.com/david_syer)  
+Email: dsyer@vmware.com  
+Github: https://github.com/dsyer/inner-loop-boot-k8s
+
 - [Inner Loop with Spring Boot and Kubernetes](#inner-loop-with-spring-boot-and-kubernetes)
   - [Getting Set Up](#getting-set-up)
   - [Build a Container](#build-a-container)
@@ -11,11 +16,26 @@
 
 ## Getting Set Up
 
-To explore the examples in this project you will need a Kubernetes cluster, and some command line tools: `kubectl`, `kustomize` (optionally), `skaffold`, `telepresence` and `tilt`. If you want a local cluster you can use `kind` and there is a utility script to set the cluster up in `kind-setup.sh`.
+To explore the examples in this project you will need a Kubernetes cluster, and some command line tools: `kubectl`, `kustomize` (optionally), [`skaffold`](https://skaffold.dev), [`telepresence`](https://www.getambassador.io/docs/telepresence/) and [`tilt`](https://tilt.dev/). If you want a local cluster you can use `kind` and there is a utility script to set the cluster up in `kind-setup.sh`.
 
 If you are able to use [Nix](https://nixos.org/guides/install-nix.html) then you can install everything you need with `nix-shell` (on the command line in the root of the project).
 
-An IDE will be useful. VSCode has excellent Kubernetes features that you can install as extensions.
+```
+$ nix-shell
+   ___                         _                       
+ _|_ _|_ __  _ __   ___ _ __  | |    ___   ___  _ __ _ 
+(_)| || '_ \| '_ \ / _ \ '__| | |   / _ \ / _ \| '_ (_)
+ _ | || | | | | | |  __/ |    | |__| (_) | (_) | |_) | 
+(_)___|_| |_|_| |_|\___|_|    |_____\___/ \___/| .__(_)
+                                               |_|     
+Cluster already active: kind
+Setting up kubeconfig
+configmap/local-registry-hosting unchanged
+NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes     ClusterIP   10.96.0.1       <none>        443/TCP   4h29m
+```
+
+An IDE will be useful. [VSCode](https://code.visualstudio.com/) has excellent Kubernetes features that you can install as extensions.
 
 ## Build a Container
 
@@ -55,20 +75,6 @@ To enable devtools we need an extra dependency, and to make it work in a contain
                 <scope>runtime</scope>
             </dependency>
         </dependencies>
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <configuration>
-                        <excludeDevtools>false</excludeDevtools>
-                        <image>
-                            <name>localhost:5000/apps/${project.artifactId}</name>
-                        </image>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </build>
     </profile>
 </profiles>
 ```
@@ -200,7 +206,7 @@ telepresence intercept hello-world --port 8080:http
     Intercepting     : all TCP connections
 ```
 
-Anything running on port 8080 locally will now be connected to the k8s service "hello-world", and that includes an app running in the debugger.
+Anything running on port 8080 locally will now be connected to the k8s service "hello-world", and that includes an app running in the debugger. Even neater, Telepresence maps DNS on the cluster to localhost, so you can connect to the app via http://hello-world.default/.
 
 To shut down the tunnel:
 
