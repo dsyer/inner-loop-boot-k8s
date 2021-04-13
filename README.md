@@ -82,7 +82,7 @@ To enable devtools we need an extra dependency, and to make it work in a contain
 Then you can run the app from the command line like this:
 
 ```
-./mvnw spring-boot:run
+./mvnw spring-boot:run -P devtools
 ```
 
 ```

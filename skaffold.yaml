@@ -4,7 +4,7 @@ build:
   artifacts:
     - image: localhost:5000/apps/demo
 #      custom:
-#        buildCommand: ./mvnw spring-boot:build-image -D spring-boot.build-image.imageName=$IMAGE && docker push $IMAGE
+#        buildCommand: ./mvnw spring-boot:build-image -P devtools -D spring-boot.build-image.imageName=$IMAGE && docker push $IMAGE
       buildpacks:
         builder: paketobuildpacks/builder:base
         env:
