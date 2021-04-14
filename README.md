@@ -1,11 +1,12 @@
 
-# [Inner Loop](https://www.getambassador.io/docs/telepresence/latest/concepts/devloop/) with Spring Boot and Kubernetes
+# Inner Loop with Spring Boot and Kubernetes
 
 Twitter: [@david_syer  ](https://twitter.com/david_syer)  
 Email: dsyer@vmware.com  
 Github: https://github.com/dsyer/inner-loop-boot-k8s
 
 - [Inner Loop with Spring Boot and Kubernetes](#inner-loop-with-spring-boot-and-kubernetes)
+  - [Inner Loop and Outer Loop](#inner-loop-and-outer-loop)
   - [Getting Set Up](#getting-set-up)
   - [Build a Container](#build-a-container)
   - [Spring Boot Devtools](#spring-boot-devtools)
@@ -13,6 +14,21 @@ Github: https://github.com/dsyer/inner-loop-boot-k8s
   - [Telepresence](#telepresence)
   - [Telepresence 0.1](#telepresence-01)
   - [Tilt](#tilt)
+
+## [Inner Loop](https://github.com/spring-projects/spring-boot/issues/22691) and Outer Loop
+
+Inner Loop:
+
+* Make a small channge to code
+* See it wiggle
+* Debugger
+* Iterate
+
+Outer Loop:
+
+* Push a change to remote repository
+* Automation builds, tests and promotes code to runtime
+* Testing in production 
 
 ## Getting Set Up
 
