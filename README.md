@@ -8,8 +8,9 @@ Github: https://github.com/dsyer/inner-loop-boot-k8s
 - [Inner Loop with Spring Boot and Kubernetes](#inner-loop-with-spring-boot-and-kubernetes)
   - [Inner Loop and Outer Loop](#inner-loop-and-outer-loop)
   - [Getting Set Up](#getting-set-up)
-  - [Build a Container](#build-a-container)
+  - [Run the Sample App](#run-the-sample-app)
   - [Spring Boot Devtools](#spring-boot-devtools)
+  - [Build a Container](#build-a-container)
   - [Skaffold](#skaffold)
   - [Telepresence](#telepresence)
   - [Telepresence 0.1](#telepresence-01)
@@ -28,6 +29,7 @@ Outer Loop:
 
 * Push a change to remote repository
 * Automation builds, tests and promotes code to runtime
+* Continuous Deployment
 * Testing in production 
 
 ## Getting Set Up
@@ -53,26 +55,15 @@ service/kubernetes     ClusterIP   10.96.0.1       <none>        443/TCP   4h29m
 
 An IDE will be useful. [VSCode](https://code.visualstudio.com/) has excellent Kubernetes features that you can install as extensions.
 
-## Build a Container
+## Run the Sample App
 
-There are many ways to build a container from a Spring Boot application. Here we will use [Paketo Build Packs](https://paketo.io/docs/buildpacks/). Spring Boot has a build plugin that uses buildpacks:
-
-```
-./mvnw spring-boot:build-image
-```
-
-Then you can run it
+Run the `main()` method from your IDE or the command line:
 
 ```
-docker run -p 8080:8080 localhost:5000/apps/demo
+./mvnw spring-boot:run
 ```
 
-```
-Setting Active Processor Count to 8
-Calculating JVM memory based on 16202804K available memory
-Calculated JVM Memory Configuration: -XX:MaxDirectMemorySize=10M -Xmx15809483K -XX:MaxMetaspaceSize=86120K -XX:ReservedCodeCacheSize=240M -Xss1M (Total Memory: 16202804K, Thread Count: 50, Loaded Class Count: 12791, Headroom: 0%)
-...
-```
+Verify that it works at http://localhost:8080.
 
 ## Spring Boot Devtools
 
@@ -121,7 +112,28 @@ Then you can run the app from the command line like this:
 
 The signature that it is working is the thread name "restartedMain". When you see that, you know you can make changes to the application in your IDE and the app will restart. The restart is fast because the JVM is already warm.
 
-To run the app in a container you would need to re-build it:
+## Build a Container
+
+There are many ways to build a container from a Spring Boot application. Here we will use [Paketo Build Packs](https://paketo.io/docs/buildpacks/). Spring Boot has a build plugin that uses buildpacks:
+
+```
+./mvnw spring-boot:build-image
+```
+
+Then you can run it
+
+```
+docker run -p 8080:8080 localhost:5000/apps/demo
+```
+
+```
+Setting Active Processor Count to 8
+Calculating JVM memory based on 16202804K available memory
+Calculated JVM Memory Configuration: -XX:MaxDirectMemorySize=10M -Xmx15809483K -XX:MaxMetaspaceSize=86120K -XX:ReservedCodeCacheSize=240M -Xss1M (Total Memory: 16202804K, Thread Count: 50, Loaded Class Count: 12791, Headroom: 0%)
+...
+```
+
+To run the app in a container with devtools you would need to re-build it:
 
 ```
 ./mvnw spring-boot:build-image -P devtools
@@ -262,14 +274,14 @@ Hello Spring!
 Now replace the app pod with a local Spring Boot app:
 
 ```
-telepresence --swap-deployment hello-world --docker-run --rm -v$(pwd):/build -v $HOME/.m2/repository:/m2 -p 8080:80 -w /build openjdk:11 ./mvnw -Dmaven.repo.local=/m2 spring-boot:run
+telepresence --swap-deployment hello-world --run ./mvnw spring-boot:run
 ```
 
-Yay!
+Run the app and make a change locally. You can connect to it through the cluster. Yay!
 
 ```
-$ curl localhost:8080
-Hello, Spring!
+$ curl localhost:8000
+Hello, Spring (local)!
 ```
 
 ## Tilt
