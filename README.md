@@ -20,7 +20,7 @@ Github: https://github.com/dsyer/inner-loop-boot-k8s
 
 Inner Loop:
 
-* Make a small channge to code
+* Make a small change to code
 * See it wiggle
 * Debugger
 * Iterate
@@ -302,4 +302,4 @@ k8s_yaml(kustomize('./src/k8s/demo'))
 k8s_resource('hello-world', port_forwards="8080:8080")
 ```
 
-You just do `tilt up` on the command line, and that's it. The local port forward is explicitly on port 8080 there (and it connects to the pod not the service by default). We are syncing the build results the same as in Skaffold.
+You just do `tilt up` on the command line, and that's it. The local port forward is explicitly on port 8080 there (and it connects to the pod not the service by default). We are syncing the build results the same as with Skaffold.
