@@ -218,6 +218,7 @@ You might need a timeout to be configured (telepresence will tell you if it time
 $ cat > ~/.config/telepresence/config.yml
 timeouts:
   trafficManagerConnect: 120
+  trafficManagerAPI: 120
 ```
 
 Then add an intercept for the service:
