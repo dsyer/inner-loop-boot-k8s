@@ -1,8 +1,8 @@
 #!/bin/bash
 
-version=${KIND_VERSION:-v1.19.11}
+version=${KIND_VERSION:-v1.21.1}
 clusters=$(kind get clusters)
-reg_name='registry'
+reg_name='registry.local'
 reg_port='5000'
 
 # desired cluster name; default is "kind"
@@ -23,13 +23,29 @@ function create_cluster() {
 	reg_ip=$(docker inspect -f '{{.NetworkSettings.IPAddress}}' "${reg_name}")
 
 	# create a cluster with the local registry enabled in containerd
-	cat <<EOF | kind create cluster --image=kindest/node:${version} --name "${KIND_CLUSTER_NAME}" --config=-
+	cat <<EOF | kind create cluster --name "${KIND_CLUSTER_NAME}" --config=-
 kind: Cluster 
 apiVersion: kind.x-k8s.io/v1alpha4
 containerdConfigPatches: 
 - |-
-  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."${reg_name}:${reg_port}"]
     endpoint = ["http://${reg_name}:${reg_port}"]
+nodes:
+- role: control-plane
+  image: kindest/node:${version}
+  kubeadmConfigPatches:
+    - |
+      kind: InitConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "ingress-ready=true"
+  extraPortMappings:
+    - containerPort: 31080
+      hostPort: 80
+      protocol: TCP
+    - containerPort: 443
+      hostPort: 443
+      protocol: TCP
 EOF
 	docker network connect "kind" "${reg_name}"
 }
@@ -40,7 +56,7 @@ if [[ "${clusters}" == *"${KIND_CLUSTER_NAME}"* ]]; then
 	if [ "$1" != "--force" ]; then
 		echo "Cluster already active: ${clusters}"
 	else
-		kind delete cluster
+		kind delete cluster --name ${KIND_CLUSTER_NAME}
 		create_cluster ${version}
 	fi
 else
@@ -49,8 +65,8 @@ fi
 
 echo Setting up kubeconfig
 mkdir -p ~/.kube
-kind get kubeconfig --internal > ~/.kube/kind-config-internal
-kind get kubeconfig > ~/.kube/kind
+kind get kubeconfig --name ${KIND_CLUSTER_NAME} --internal > ~/.kube/kind-config-internal
+kind get kubeconfig --name ${KIND_CLUSTER_NAME} > ~/.kube/kind
 KUBECONFIG=~/.kube/kind:~/.kube/config kubectl config view --merge --flatten > .config.yaml
 mv .config.yaml ~/.kube/config
 
@@ -64,6 +80,6 @@ metadata:
   namespace: kube-public
 data:
   localRegistryHosting.v1: |
-    host: "localhost:${reg_port}"
+    host: "${reg_name}:${reg_port}"
     help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
 EOF

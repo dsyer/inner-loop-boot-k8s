@@ -14,7 +14,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
-		<image>localhost:5000/apps/${project.artifactId}</image>
+		<image>registry.local:5000/apps/${project.artifactId}</image>
 	</properties>
 	<dependencies>
 		<dependency>
