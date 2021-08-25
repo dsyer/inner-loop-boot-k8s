@@ -1,4 +1,4 @@
-with import <nixpkgs> { };
+with import <nixpkgs> { overlays = [(import ./overlay.nix)]; } ;
 mkShell {
   name = "env";
   buildInputs = [
