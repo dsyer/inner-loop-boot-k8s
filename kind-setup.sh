@@ -6,7 +6,7 @@ reg_name='registry.local'
 reg_port='5000'
 
 # desired cluster name; default is "kind"
-KIND_CLUSTER_NAME="${KIND_CLUSTER_NAME:-kind}"
+KIND_CLUSTER_NAME="${KIND_CLUSTER_NAME:-knative}"
 
 function start_registry() {
 	# create registry container unless it already exists
@@ -65,9 +65,9 @@ fi
 
 echo Setting up kubeconfig
 mkdir -p ~/.kube
-kind get kubeconfig --name ${KIND_CLUSTER_NAME} --internal > ~/.kube/kind-config-internal
-kind get kubeconfig --name ${KIND_CLUSTER_NAME} > ~/.kube/kind
-KUBECONFIG=~/.kube/kind:~/.kube/config kubectl config view --merge --flatten > .config.yaml
+kind get kubeconfig --name ${KIND_CLUSTER_NAME} --internal > ~/.kube/${KIND_CLUSTER_NAME}-config-internal
+kind get kubeconfig --name ${KIND_CLUSTER_NAME} > ~/.kube/${KIND_CLUSTER_NAME}
+KUBECONFIG=~/.kube/${KIND_CLUSTER_NAME}:~/.kube/config kubectl config view --merge --flatten > .config.yaml
 mv .config.yaml ~/.kube/config
 
 # Document the local registry

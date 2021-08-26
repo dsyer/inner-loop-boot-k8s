@@ -123,7 +123,7 @@ There are many ways to build a container from a Spring Boot application. Here we
 Then you can run it
 
 ```
-docker run -p 8080:8080 localhost:5000/apps/demo
+docker run -p 8080:8080 registry.local:5000/apps/demo
 ```
 
 ```
@@ -142,7 +142,7 @@ To run the app in a container with devtools you would need to re-build it:
 then at runtime you need a JVM system property:
 
 ```
-docker run -p 8080:8080 -e JAVA_TOOL_OPTIONS=-Dspring.devtools.restart.enabled=true localhost:5000/apps/demo
+docker run -p 8080:8080 -e JAVA_TOOL_OPTIONS=-Dspring.devtools.restart.enabled=true registry.local:5000/apps/demo
 ```
 
 ```
@@ -167,7 +167,7 @@ apiVersion: skaffold/v2beta10
 kind: Config
 build:
   artifacts:
-    - image: localhost:5000/apps/demo
+    - image: registry.local:5000/apps/demo
       buildpacks:
         builder: paketobuildpacks/builder:base
         env:
@@ -197,7 +197,7 @@ Instead of using Skaffold to sync the changes with your source code into a runni
 
 ```
 ./mvnw spring-boot:build-image
-docker push localhost:5000/apps/demo
+docker push registry.local:5000/apps/demo
 ```
 
 and make sure there is a service running:
@@ -292,7 +292,7 @@ Hello, Spring (local)!
 ```
 # -*- mode: Python -*-
 
-custom_build('localhost:5000/apps/demo', 
+custom_build('registry.local:5000/apps/demo', 
   './mvnw spring-boot:build-image -P devtools -D image=$EXPECTED_REF',
   ['pom.xml', './target/classes'],
   live_update = [

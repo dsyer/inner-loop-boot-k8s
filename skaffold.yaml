@@ -2,7 +2,7 @@ apiVersion: skaffold/v2beta10
 kind: Config
 build:
   artifacts:
-    - image: localhost:5000/apps/demo
+    - image: registry.local:5000/apps/demo
 #      custom:
 #        buildCommand: ./mvnw spring-boot:build-image -P devtools -D spring-boot.build-image.imageName=$IMAGE && docker push $IMAGE
       buildpacks:
