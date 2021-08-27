@@ -1,0 +1,10 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: hello-world
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - image: registry.local:5000/apps/demo
