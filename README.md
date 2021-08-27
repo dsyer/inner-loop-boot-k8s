@@ -55,6 +55,13 @@ service/kubernetes     ClusterIP   10.96.0.1       <none>        443/TCP   4h29m
 
 An IDE will be useful. [VSCode](https://code.visualstudio.com/) has excellent Kubernetes features that you can install as extensions.
 
+Optionally install Knative Serving
+
+```
+curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-serving.sh | bash
+curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-kourier.sh | bash
+```
+
 ## Run the Sample App
 
 Run the `main()` method from your IDE or the command line:
