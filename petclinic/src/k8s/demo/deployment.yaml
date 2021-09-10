@@ -29,6 +29,13 @@ spec:
             cpu: 500m
           limits:
             cpu: 4000m
+        volumeMounts:
+        - name: mysql
+          mountPath: /config/bindings/mysql/meta
+      volumes:
+      - name: mysql
+        configMap:
+          name: mysql-config
 ---
 apiVersion: v1
 kind: Service
