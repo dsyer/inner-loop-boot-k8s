@@ -1,18 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: petclinic
   labels:
-    app: app
+    app: petclinic
+    services: mysql
 spec:
   selector:
     matchLabels:
-      app: app
+      app: petclinic
   replicas: 1
   template:
     metadata:
       labels:
-        app: app
+        app: petclinic
     spec:
       containers:
       - image: apps/demo
@@ -32,7 +33,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app
+  name: petclinic
 spec:
   ports:
   - name: http
@@ -40,7 +41,7 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: app
+    app: petclinic
 ---
 apiVersion: v1
 kind: ConfigMap
