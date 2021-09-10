@@ -13,4 +13,4 @@ local_resource(
   deps=['target/classes', 'pom.xml'])
 
 k8s_yaml(kustomize('./src/k8s/demo'))
-k8s_resource('petclinic', port_forwards="8080:8080")
+k8s_resource('app', port_forwards="8080:8080")

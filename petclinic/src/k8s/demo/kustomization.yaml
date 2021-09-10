@@ -1,9 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-commonLabels:
-  app: petclinic
 images:
   - name: apps/demo
     newName: localhost:5000/apps/spring-petclinic
 resources:
 - deployment.yaml
+- ../mysql
+transformers:
+- ../mysql/transformer
+configMapGenerator:
+  - name: env-config
+    behavior: merge
+    literals:
+      - SPRING_CONFIG_LOCATION=classpath:/,file:///config/bindings/mysql/meta/
+      - DATABASE=mysql

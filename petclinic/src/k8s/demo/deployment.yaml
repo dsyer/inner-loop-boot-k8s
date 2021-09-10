@@ -1,14 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: petclinic
+  name: app
+  labels:
+    app: app
 spec:
+  selector:
+    matchLabels:
+      app: app
   replicas: 1
   template:
+    metadata:
+      labels:
+        app: app
     spec:
       containers:
       - image: apps/demo
-        name: petclinic
+        name: app
+        envFrom:
+        - configMapRef:
+            name: env-config
         env:
         - name: JAVA_TOOL_OPTIONS
           value: -Dspring.devtools.restart.enabled=true
@@ -21,10 +32,17 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: petclinic
+  name: app
 spec:
   ports:
   - name: http
     port: 80
     protocol: TCP
     targetPort: 8080
+  selector:
+    app: app
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-config

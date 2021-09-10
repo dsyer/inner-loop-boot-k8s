@@ -1,0 +1,14 @@
+# ssh into the nodes, mkdir /mnt/data and then apply this on clusters without a default pv (e.g. katacoda)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql
+  labels:
+    type: mysql
+spec:
+  capacity:
+    storage: 8Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"

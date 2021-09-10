@@ -1,0 +1,5 @@
+# $ kustomize build k8s/dev | kubectl apply -f -
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - app.yaml

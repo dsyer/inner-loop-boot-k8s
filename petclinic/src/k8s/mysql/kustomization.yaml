@@ -1,0 +1,27 @@
+# $ kustomize build k8s/dev | kubectl apply -f -
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - pvc.yaml
+  - deployment.yaml
+  - config.yaml
+configMapGenerator:
+  - name: mysql-config
+    behavior: merge
+    files:
+      - application.properties
+  - name: mysql-env
+    behavior: merge
+    literals:
+      - MYSQL_HOST=$(MYSQL_HOST)
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=test
+vars:
+  - name: MYSQL_HOST
+    objref:
+      apiVersion: v1
+      kind: Service
+      name: mysql
+configurations:
+  - varreference.yaml
