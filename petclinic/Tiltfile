@@ -1,0 +1,16 @@
+# -*- mode: Python -*-
+
+custom_build('localhost:5000/apps/spring-petclinic', 
+  '../mvnw spring-boot:build-image -D image=$EXPECTED_REF',
+  ['./target/copy-classes'],
+  live_update = [
+    sync('./target/copy-classes', '/workspace/BOOT-INF/classes')
+  ]
+)
+local_resource(
+  'build-files',
+  'rsync -avz target/classes/ target/copy-classes',
+  deps=['target/classes', 'pom.xml'])
+
+k8s_yaml(kustomize('./src/k8s/demo'))
+k8s_resource('petclinic', port_forwards="8080:8080")

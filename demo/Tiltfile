@@ -1,7 +1,7 @@
 # -*- mode: Python -*-
 
 custom_build('localhost:5000/apps/demo', 
-  './mvnw spring-boot:build-image -P devtools -D image=$EXPECTED_REF',
+  '../mvnw spring-boot:build-image -P devtools -D image=$EXPECTED_REF',
   ['pom.xml', './target/classes'],
   live_update = [
     sync('./target/classes', '/workspace/BOOT-INF/classes')

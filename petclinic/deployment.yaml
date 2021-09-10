@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: petclinic
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - image: apps/demo
+        name: petclinic
+        env:
+        - name: JAVA_TOOL_OPTIONS
+          value: -Dspring.devtools.restart.enabled=true
+        resources:
+          requests:
+            cpu: 500m
+          limits:
+            cpu: 4000m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: petclinic
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
