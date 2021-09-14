@@ -5,19 +5,5 @@ images:
     newName: localhost:5000/apps/spring-petclinic
 resources:
 - deployment.yaml
-- mysql.yaml
-- pvc.yaml
-- config.yaml
 patchesStrategicMerge:
   - binding.yaml
-secretGenerator:
-  - name: mysql-config
-    behavior: merge
-    envs:
-      - application.env
-vars:
-  - name: MYSQL_HOST
-    objref:
-      apiVersion: v1
-      kind: Service
-      name: mysql
