@@ -1,3 +1,0 @@
-varReference:
-- path: data/application.properties
-  kind: Secret

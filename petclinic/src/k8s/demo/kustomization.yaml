@@ -19,5 +19,3 @@ vars:
       apiVersion: v1
       kind: Service
       name: mysql
-configurations:
-  - varreference.yaml
