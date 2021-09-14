@@ -8,6 +8,8 @@ resources:
 - mysql.yaml
 - pvc.yaml
 - config.yaml
+patchesStrategicMerge:
+  - binding.yaml
 secretGenerator:
   - name: mysql-config
     behavior: merge

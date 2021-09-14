@@ -21,24 +21,11 @@ spec:
         env:
         - name: JAVA_TOOL_OPTIONS
           value: -Dspring.devtools.restart.enabled=true
-        - name: SERVICE_BINDING_ROOT
-          value: /config/bindings
-        - name: DATABASE
-          value: mysql
-        - name: MYSQL_HOST
-          value: $(MYSQL_HOST)
         resources:
           requests:
             cpu: 500m
           limits:
             cpu: 4000m
-        volumeMounts:
-        - name: mysql
-          mountPath: /config/bindings/mysql
-      volumes:
-      - name: mysql
-        secret:
-          secretName: mysql-config
 ---
 apiVersion: v1
 kind: Service
