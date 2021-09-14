@@ -18,12 +18,13 @@ spec:
       containers:
       - image: apps/demo
         name: app
-        envFrom:
-        - configMapRef:
-            name: env-config
         env:
         - name: JAVA_TOOL_OPTIONS
           value: -Dspring.devtools.restart.enabled=true
+        - name: SERVICE_BINDING_ROOT
+          value: /config/bindings
+        - name: DATABASE
+          value: mysql
         resources:
           requests:
             cpu: 500m
@@ -31,11 +32,11 @@ spec:
             cpu: 4000m
         volumeMounts:
         - name: mysql
-          mountPath: /config/bindings/mysql/meta
+          mountPath: /config/bindings/mysql
       volumes:
       - name: mysql
-        configMap:
-          name: mysql-config
+        secret:
+          secretName: mysql-config
 ---
 apiVersion: v1
 kind: Service
@@ -49,8 +50,3 @@ spec:
     targetPort: 8080
   selector:
     app: petclinic
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: env-config

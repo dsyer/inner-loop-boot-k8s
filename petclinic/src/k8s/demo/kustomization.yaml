@@ -8,23 +8,11 @@ resources:
 - mysql.yaml
 - pvc.yaml
 - config.yaml
-configMapGenerator:
-  - name: env-config
-    behavior: merge
-    literals:
-      - SPRING_CONFIG_LOCATION=classpath:/,file:///config/bindings/mysql/meta/
-      - DATABASE=mysql
+secretGenerator:
   - name: mysql-config
     behavior: merge
-    files:
-      - application.properties
-  - name: mysql-env
-    behavior: merge
-    literals:
-      - MYSQL_HOST=$(MYSQL_HOST)
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=password
-      - MYSQL_DATABASE=test
+    envs:
+      - application.env
 vars:
   - name: MYSQL_HOST
     objref:

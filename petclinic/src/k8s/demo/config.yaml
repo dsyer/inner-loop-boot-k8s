@@ -1,9 +1,4 @@
 apiVersion: v1
-kind: ConfigMap
+kind: Secret
 metadata:
   name: mysql-config
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mysql-env

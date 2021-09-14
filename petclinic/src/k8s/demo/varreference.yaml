@@ -1,5 +1,3 @@
 varReference:
 - path: data/application.properties
-  kind: ConfigMap
-- path: data/MYSQL_HOST
-  kind: ConfigMap
+  kind: Secret
