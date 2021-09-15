@@ -315,7 +315,6 @@ You just do `tilt up` on the command line, and that's it. The local port forward
 
 To try the same exercises with the petclinic and a MySQL database you can instead go to the `petclinic` subdirectory.
 
-The command line process for the inner loop is the same. We can just take a quick look here at the application source code to highlight the bindings to the database. The source code itself is just a vanilla [Petclinic](https://github.com/spring-projects/pring-petclinic) with an extra `src/k8s` directory for the Kubernetes manifests. 
 
 First get the database running with
 
@@ -325,7 +324,9 @@ kubectl apply -f <(kustomize build src/k8s/mysql)
 
 That makes a new service endpoint for the database called `mysql`, so that will be the DNS-resolvable hostname for the application to connect to it. It also creates a Kubernetes secret in the default namespace which follows the [Kubernetes Service Binding](https://github.com/k8s-service-bindings/spec) conventions.
 
-The secret is then mounted in the application as a volume, which we apply as a [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/patchesstrategicmerge/) patch:
+The command line process for the inner loop is the same once the database is running. We can just take a quick look here at the application source code to highlight the bindings to the database. The source code itself is just a vanilla [Petclinic](https://github.com/spring-projects/pring-petclinic) with an extra `src/k8s` directory for the Kubernetes manifests. 
+
+The secret is mounted in the application as a volume, which we apply as a [Kustomize](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/patchesstrategicmerge/) patch:
 
 ```yaml
 apiVersion: apps/v1
