@@ -12,8 +12,6 @@ spec:
           value: /config/bindings
         - name: DATABASE
           value: mysql
-        - name: MYSQL_HOST
-          value: mysql
         volumeMounts:
         - name: mysql
           mountPath: /config/bindings/mysql
