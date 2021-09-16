@@ -21,6 +21,8 @@ spec:
         env:
         - name: JAVA_TOOL_OPTIONS
           value: -Dspring.devtools.restart.enabled=true
+        - name: DATABASE
+          value: mysql
         resources:
           requests:
             cpu: 500m

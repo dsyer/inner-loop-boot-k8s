@@ -30,6 +30,8 @@ containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
     endpoint = ["http://${reg_name}:${reg_port}"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."${reg_name}:${reg_port}"]
+    endpoint = ["http://${reg_name}:${reg_port}"]
 EOF
 	docker network connect "kind" "${reg_name}"
 }

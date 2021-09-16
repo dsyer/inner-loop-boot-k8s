@@ -1,7 +1,7 @@
 apiVersion: servicebinding.io/v1alpha3
 kind: ServiceBinding
 metadata:
-  name: petclinic-binding
+  name: petclinic
 spec:
   # direct Secret reference is used for compatibility, but not recommended for dynamically provisioned services
   service:
