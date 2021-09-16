@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: petclinic
+spec:
+  template:
+    spec:
+      containers:
+      - name: app
+        env:
+        - name: SERVICE_BINDING_ROOT
+          value: /config/bindings
+        - name: DATABASE
+          value: mysql
+        volumeMounts:
+        - name: mysql
+          mountPath: /config/bindings/mysql
+      volumes:
+      - name: mysql
+        secret:
+          secretName: mysql-config

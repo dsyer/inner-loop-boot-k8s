@@ -1,21 +1,14 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: servicebinding.io/v1alpha3
+kind: ServiceBinding
 metadata:
-  name: petclinic
+  name: petclinic-binding
 spec:
-  template:
-    spec:
-      containers:
-      - name: app
-        env:
-        - name: SERVICE_BINDING_ROOT
-          value: /config/bindings
-        - name: DATABASE
-          value: mysql
-        volumeMounts:
-        - name: mysql
-          mountPath: /config/bindings/mysql
-      volumes:
-      - name: mysql
-        secret:
-          secretName: mysql-config
+  # direct Secret reference is used for compatibility, but not recommended for dynamically provisioned services
+  service:
+    apiVersion: v1
+    kind: Secret
+    name: mysql-config
+  workload:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: petclinic

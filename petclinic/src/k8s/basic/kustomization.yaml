@@ -5,4 +5,5 @@ images:
     newName: localhost:5000/apps/spring-petclinic
 resources:
 - deployment.yaml
-- binding.yaml
+patchesStrategicMerge:
+  - binding.yaml
